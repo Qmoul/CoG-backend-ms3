@@ -15,7 +15,8 @@ app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes
 
-app.use('/api/auth', require('./restapi/auth'));
+app.use('/restapi/auth', require('./restapi/auth'));
+app.use('/restapi/users', require('./restapi/users'));
 
 const PORT = process.env.PORT || 5000;
 

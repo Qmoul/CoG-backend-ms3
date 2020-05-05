@@ -1,5 +1,5 @@
 const sequelize = require('sequelize');
 
-module.exports = new sequelize('', 'root', '1234567', {
+module.exports = new sequelize('cog', 'root', '1234567', {
   dialect: 'mariadb',
 });

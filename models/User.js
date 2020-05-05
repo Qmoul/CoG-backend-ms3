@@ -1,18 +1,17 @@
 const sequelize = require('sequelize');
 const db = require('../config/db');
 
-const UserTable = db.define('user', {
-  id: {
-    type: sequelize.INTEGER,
-    primaryKey: true,
+const User = db.define('user', {
+  name: sequelize.STRING,
+  email: sequelize.STRING,
+  password: sequelize.STRING,
+  rating: sequelize.REAL,
+  birthDate: sequelize.DATE,
+  registrationDate: {
+    type: sequelize.DATE,
+    default: Date.now(),
   },
-  name: sequelize.TEXT,
-  Rating: sequelize.REAL,
-  BirthDate: sequelize.DATE,
-  RegistrationDate: sequelize.DATE,
-  Information: sequelize.STRING,
-  Email: sequelize.STRING,
-  Password: sequelize.STRING,
+  information: sequelize.STRING,
 });
 
-module.exports = User = db.model('user');
+module.exports = User;
