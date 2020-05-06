@@ -3,10 +3,10 @@ const connectDB = require('./config/db');
 const app = express();
 
 //Connection to the database
-connectDB
-  .authenticate()
-  .then(() => console.log('Database connected'))
-  .catch((err) => console.log('Error: ' + err));
+// connectDB
+//   .authenticate()
+//   .then(() => console.log('Database connected'))
+//   .catch((err) => console.log('Error: ' + err));
 
 // Init Middleware
 app.use(express.json({ extended: false }));

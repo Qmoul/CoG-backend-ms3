@@ -9,7 +9,7 @@ const User = db.define('user', {
   birthDate: sequelize.DATE,
   registrationDate: {
     type: sequelize.DATE,
-    default: Date.now(),
+    default: Date.now()
   },
   information: sequelize.STRING,
 });
