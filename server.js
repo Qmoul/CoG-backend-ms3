@@ -15,9 +15,14 @@ app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes
 
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
 app.use('/restapi/auth', require('./restapi/auth'));
 app.use('/restapi/users', require('./restapi/users'));
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Sever started on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
