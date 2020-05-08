@@ -26,6 +26,7 @@ app.use(function (req, res, next) {
 app.use('/restapi/auth', require('./restapi/auth'));
 app.use('/restapi/users', require('./restapi/users'));
 app.use('/restapi/parties', require('./restapi/parties'));
+app.use('/restapi/activity', require('./restapi/activity'));
 
 const PORT = process.env.PORT || 5000;
 
