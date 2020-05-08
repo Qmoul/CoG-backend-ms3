@@ -10,20 +10,22 @@ const User_party = db.define('user_party', {
     reference: {
         model:'users',
         key:'id'
-    }
+    },
+    field: 'user_id'
   },
   party_id: {
       type: sequelize.INTEGER,
     reference : {
         model:'activities',
         key:'id'
-    }
+    },
+    field: 'party_id'
       }, 
     numberofusers: sequelize.INTEGER,
   isgoing: sequelize.BOOLEAN
 });
 
-User.hasMany(User_party);
-Party.hasMany(User_party);
+// User.hasMany(User_party);
+// Party.hasMany(User_party);
 
 module.exports = User_party;
