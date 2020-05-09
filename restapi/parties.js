@@ -121,4 +121,42 @@ router.post(
     }
   }
 );
+
+//MODIFIED TO BE ABLE TO INITIALIZE FROM FRONTEND
+// @route   POST restapi/parties/initialize
+// @desc    Create a post
+// @access  Private
+router.post('/initialize', async (req, res) => {
+  try {
+    //Creating the party itself
+    const activity = await Activity.findOne({
+      where: { name: req.body.activity_name },
+    });
+    if (activity == null) {
+      return res.status(404).json({
+        errors: [{ msg: 'You need to choose an existing activity' }],
+      });
+    }
+    const newParty = new Party({
+      name: req.body.name,
+      date: req.body.date,
+      user_id: req.body.user_id,
+      activity_id: activity.id,
+      isagroup: false,
+    });
+    //Creat the join table data, automatically adding 1 to the number of users
+    const party = await newParty.save();
+    const newUserParty = new User_party({
+      user_id: req.body.user_id,
+      party_id: party.id,
+      numberofusers: 1,
+      isgoing: 0,
+    });
+    await newUserParty.save();
+    res.status(200).send('ok');
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 module.exports = router;
