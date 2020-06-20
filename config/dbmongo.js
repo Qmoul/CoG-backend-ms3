@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const db = 'mongodb://localhost:27017';
+const db = 'mongodb://cogdatabasemongo:27017';
 mongoose.set('debug', true);
 const connectDBMongo = async () => {
   try {
