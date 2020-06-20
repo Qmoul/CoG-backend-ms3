@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 
 const Activity = require('../models/Activity');
+const ActivityMongo = require('../models/mongo/Activity');
 
 // @route   GET restapi/activity
 // @desc    Get all activity
@@ -73,6 +74,30 @@ router.post('/initialize', async (req, res) => {
     });
     await activity.save();
     res.status(200).send('ok');
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+router.post('/migrate', async (req, res) => {
+  try {
+    console.log('migrating activities');
+    const activityAll = await Activity.findAll();
+    try {
+      await activityAll.forEach((activity) => {
+        activityMongo = new ActivityMongo({
+          id: activity.id,
+          name: activity.name,
+          description: activity.description,
+        });
+        activityMongo.save();
+      });
+      res.status(200).send('ok');
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('error');
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

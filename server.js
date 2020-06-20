@@ -1,12 +1,15 @@
 const express = require('express');
 const connectDB = require('./config/db');
+const connectDBMongo = require('./config/dbmongo');
 const app = express();
 
-//Connection to the database
-// connectDB
-//   .authenticate()
-//   .then(() => console.log('Database connected'))
-//   .catch((err) => console.log('Error: ' + err));
+// Connection to the database
+connectDB
+  .authenticate()
+  .then(() => console.log('Database connected'))
+  .catch((err) => console.log('Error: ' + err));
+
+connectDBMongo();
 
 // Init Middleware
 app.use(express.json({ extended: false }));

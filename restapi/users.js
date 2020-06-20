@@ -6,7 +6,11 @@ const config = require('config');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../models/User');
-
+const UserMongo = require('../models/mongo/User');
+const Party = require('../models/Party');
+const PartyMongo = require('../models/mongo/Party');
+const User_party = require('../models/User_party');
+const Activity = require('../models/Activity');
 
 // @route   POST restapi/users
 // @desc    Register user
@@ -30,7 +34,7 @@ router.post(
     const { name, email, password } = req.body;
     try {
       //See if user exists already
-      let user = await User.findOne({where: { email} });
+      let user = await User.findOne({ where: { email } });
 
       if (user) {
         return res
@@ -71,5 +75,64 @@ router.post(
     }
   }
 );
+
+router.post('/migrate', async (req, res) => {
+  try {
+    console.log('migrating users');
+    const userAll = await User.findAll();
+    const partyAll = await Party.findAll();
+    const userpartyAll = await User_party.findAll();
+    const activityAll = await Activity.findAll();
+    try {
+      await userAll.forEach((user) => {
+        var parties = [];
+        userpartyAll.forEach((userpartyElement) => {
+          if (userpartyElement.user_id == user.id) {
+            let actualParty;
+            partyAll.forEach((partyElement) => {
+              if (partyElement.id == userpartyElement.party_id) {
+                let actualActivity;
+                activityAll.forEach((activityElement) => {
+                  if (activityElement.id == partyElement.activity_id) {
+                    actualActivity = activityElement;
+                  }
+                });
+                actualParty = {
+                  name: partyElement.name,
+                  date: partyElement.date,
+                  activity: {
+                    name: actualActivity.name,
+                    description: actualActivity.description,
+                  },
+                  isagroup: partyElement.isagroup,
+                };
+              }
+            });
+            parties.push(actualParty);
+          }
+        });
+        userMongo = new UserMongo({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          rating: user.rating,
+          birthDate: user.birthDate,
+          registrationDate: user.registrationDate,
+          information: user.information,
+          parties: parties,
+        });
+        userMongo.save();
+      });
+      res.status(200).send('ok');
+    } catch (err) {
+      console.log(err);
+      res.status(500).send('error');
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
